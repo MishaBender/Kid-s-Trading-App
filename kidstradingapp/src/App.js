@@ -1,44 +1,62 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import imageOne from "./resources/Home.jpg";
+import firebase from "firebase";
+import { FIREBASE_CONFIG } from "./Components/Firebase/const.js"; 
 
 class App extends Component {
+
   constructor(props){
       super(props);
-      this.state={buttonState:0};
+      this.state = {buttonState: 0};
+      firebase.initializeApp(FIREBASE_CONFIG);
     }
 
     render() {
     
     return (
+      
       <div className="App">
         <header className="App-header">
-        <button class="ui button" onClick={() => {
-          this.setState({buttonState:this.state.buttonState++});
-        }}>Get Started</button>
-          
-          {this.state.buttonState  >1 ?
-        (this.state.buttonState == 1 ? <img resource= "http://www3.pictures.livingly.com/gi/Misha+Bender+jU0rbv8NDyGm.jpg" /> : <img resource= "imageTwo" />)  
+        <button className="ui button" onClick={() => {
+          this.setState({buttonState:this.state.buttonState + 1});
+          var provider = new firebase.auth.GoogleAuthProvider();
+          firebase.auth().signInWithPopup(provider).then(function(result) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            // ...
+          }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+          }}button class="button3">Sign In With Google</button>
+        <button class="button2">Trade Now</button>
+       
+          <ul>
+      	{/*<li><img src={imageFour} width="1440" height="900" /></li>*/}
+      </ul>
          
+    
         
-        :
+ 
         
-        <img src= "/Users/student/Desktop/Kid-s-Trading-App/kidstradingapp/src/resources/Home.jpg" />
-        
-        }
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-           
-          </a>
+  
+  
+
+  
         </header>
       </div>
     );
   }
+  
 }
 
 export default App;
